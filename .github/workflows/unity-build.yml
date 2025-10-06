@@ -1,0 +1,34 @@
+name: Build Unity Android APK
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ১. Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ২. Unity Builder setup and build
+      - name: Setup and Build Unity Android
+        uses: game-ci/unity-builder@v4
+        with:
+          unityVersion: 2021.3.33f1
+          targetPlatform: Android
+          buildName: PrincipalPanic.apk
+          buildsPath: Build/Android
+          androidVersionCode: 13
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
+      # ৩. Upload APK as artifact
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: PrincipalPanic-APK
+          path: Build/Android/PrincipalPanic.apk
